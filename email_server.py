@@ -10,7 +10,7 @@ def login():
     host_email = 'akpannetwork@gmail.com'
     password = 'hqelfmbluipdsrsy'
     #client email 
-    client_email = 'GoLogixLLC@gmail.com'
+    client_email = 'isedemidiong@gmail.com'
 
      #start SMTP server
     try:
