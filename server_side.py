@@ -1,7 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
-import smtplib
-from email_server import send_application
+import threading
+from email_server import *
 
 class requestHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
@@ -10,13 +10,14 @@ class requestHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-            self.send_header('Access-Control-Allow-Methods', 'POST')
+            self.send_header('Access-Control-Allow-Methods', 'OPTIONS')
             self.send_header('Access-Control-Allow-Headers', 'Content-Type')
             self.end_headers()
 
             response = {'Success': 'Preflight request received'}
             response_body = json.dumps(response).encode('utf-8')
             self.wfile.write(response_body)
+
         except Exception as e:
             print(f'Error creating response: {e}')
 
@@ -26,16 +27,18 @@ class requestHandler(BaseHTTPRequestHandler):
             received_data = self.rfile.read(content_length)
             json_data = json.loads(received_data)
             response = {'Success': 'Data received without errors'}
-            print(json_data)
+            # print(json_data)
             #email server script
-            send_application(json_data)
-
+            #thread started
+            email_thread = threading.Thread(target=self.threaded_email_function, args=(json_data,))
+            email_thread.start()
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
             self.end_headers()
             response_body = json.dumps(response).encode('utf-8')
             self.wfile.write(response_body)
+
         except json.JSONDecodeError as e:
             print(f'Format for JSON incorrect: {e}')
             response = {'ERROR': 'Data not in proper JSON form'}
@@ -47,6 +50,9 @@ class requestHandler(BaseHTTPRequestHandler):
             self.wfile.write(response_body)
         except Exception as e:
             print(f'Error creating response: {e}')
+    def threaded_email_function(self, json_data):
+        print(json_data)
+        send_application(json_data)
 
 #method that stores and initializes server
 def runServer():
@@ -59,4 +65,5 @@ def runServer():
         print(f'Error with starting server: {e}')
 #
 if __name__ == '__main__':
+    login()
     runServer()

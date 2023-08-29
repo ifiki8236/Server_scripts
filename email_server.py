@@ -1,7 +1,7 @@
 import smtplib
 
 #SMTP server start
-def send_application(applicant):
+def login():
     smtp_server = 'smtp.gmail.com'
     port = 587 #port for emails and SSL protocol
     myServer = smtplib.SMTP(smtp_server, port) #initialize server
@@ -9,11 +9,10 @@ def send_application(applicant):
     #host email and password
     host_email = 'akpannetwork@gmail.com'
     password = 'hqelfmbluipdsrsy'
-
     #client email 
-    client_email = 'isedemidiong@gmail.com'
+    client_email = 'GoLogixLLC@gmail.com'
 
-    #start SMTP server
+     #start SMTP server
     try:
         myServer.starttls()
         print('[Server Started]')
@@ -28,6 +27,10 @@ def send_application(applicant):
     except Exception as e:
         print(e)
         exit()
+    return myServer, host_email, client_email
+
+def send_application(applicant):
+    myServer, host_email, client_email = login()  
 
     #compose email
     subject = ('New Applicant')
