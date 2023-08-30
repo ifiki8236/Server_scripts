@@ -58,7 +58,7 @@ class requestHandler(BaseHTTPRequestHandler):
 
 #method that stores and initializes server
 def runServer():
-    PORT = 443
+    PORT = 8080
     certfile = 'server.crt'
     keyfile = 'server.key'
     try:
@@ -71,6 +71,7 @@ def runServer():
         server.serve_forever()
     except Exception as e:
         print(f'Error with starting server: {e}')
+        return 1
 #
 # if __name__ == '__main__':
 runServer()
