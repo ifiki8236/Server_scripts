@@ -2,6 +2,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
 import threading
 from email_server import *
+import ssl
 
 class requestHandler(BaseHTTPRequestHandler):
     login()
@@ -57,10 +58,16 @@ class requestHandler(BaseHTTPRequestHandler):
 
 #method that stores and initializes server
 def runServer():
-    PORT = 80
+    PORT = 443
+    certfile = 'server.crt'
+    keyfile = 'server.key'
     try:
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(certfile=certfile, keyfile=keyfile)
+
         server = HTTPServer(('', PORT), requestHandler)
-        print(f'Starting server at http://localhost:{PORT}...')
+        server.socket = context.wrap_socket(server.socket, server_side=True)
+        print(f"Server started on port: {PORT}")
         server.serve_forever()
     except Exception as e:
         print(f'Error with starting server: {e}')
