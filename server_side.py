@@ -73,5 +73,5 @@ def runServer():
         print(f'Error with starting server: {e}')
         return 1
 #
-# if __name__ == '__main__':
-runServer()
+if __name__ == '__main__':
+    runServer()
