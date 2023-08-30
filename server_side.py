@@ -4,12 +4,13 @@ import threading
 from email_server import *
 
 class requestHandler(BaseHTTPRequestHandler):
+    login()
     def do_OPTIONS(self):
         try:
             # headers for response and allowed clients
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
+            self.send_header('Access-Control-Allow-Origin', 'https://gologixems.com/')
             self.send_header('Access-Control-Allow-Methods', 'OPTIONS')
             self.send_header('Access-Control-Allow-Headers', 'Content-Type')
             self.end_headers()
@@ -34,7 +35,7 @@ class requestHandler(BaseHTTPRequestHandler):
             email_thread.start()
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
+            self.send_header('Access-Control-Allow-Origin', 'https://gologixems.com/')
             self.end_headers()
             response_body = json.dumps(response).encode('utf-8')
             self.wfile.write(response_body)
@@ -44,7 +45,7 @@ class requestHandler(BaseHTTPRequestHandler):
             response = {'ERROR': 'Data not in proper JSON form'}
             self.send_response(400)
             self.send_header('Content-Type', 'application/json')
-            self.send_header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
+            self.send_header('Access-Control-Allow-Origin', 'https://gologixems.com/')
             self.end_headers()
             response_body = json.dumps(response).encode('utf-8')
             self.wfile.write(response_body)
@@ -56,7 +57,7 @@ class requestHandler(BaseHTTPRequestHandler):
 
 #method that stores and initializes server
 def runServer():
-    PORT = 9999
+    PORT = 80
     try:
         server = HTTPServer(('', PORT), requestHandler)
         print(f'Starting server at http://localhost:{PORT}...')
@@ -64,6 +65,5 @@ def runServer():
     except Exception as e:
         print(f'Error with starting server: {e}')
 #
-if __name__ == '__main__':
-    login()
-    runServer()
+# if __name__ == '__main__':
+runServer()
